@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using eShopSolution.Application.Catalog.Products;
+using eShopSolution.Application.Common;
 using eShopSolution.Data.EF;
 using eShopSolution.Utilities.Constaints;
 using Microsoft.AspNetCore.Builder;
@@ -35,6 +36,9 @@ namespace eShopSolutionBackendApi
 
             //Declare DI
             services.AddTransient<IPublicProductService, PublicProductService>();
+            services.AddTransient<IManageProductService, ManageProductService>();
+
+            services.AddTransient<IStorageService, FileStorageService>();
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
