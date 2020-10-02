@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using eShopSolution.ViewModels.Catalog.Products.Manage;
 using eShopSolution.ViewModels.Catalog.Products;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http.Headers;
@@ -158,9 +157,18 @@ namespace eShopSolution.Application.Catalog.Products
             return pagedResult;
         }
 
-        public Task<List<ProductImageViewModel>> GetListImage(int productId)
+        public async Task<List<ProductImageViewModel>> GetListImage(int productId)
         {
-            throw new NotImplementedException();
+            var product = await _context.Products.FindAsync(productId);
+            if (product == null) throw new EShopException($"Cannot find a product: {productId}");
+
+            return await _context.ProductImages.Where(x => x.ProductId == productId)
+                .Select(x=> new ProductImageViewModel() { 
+                    FilePath = x.ImagePath,
+                    FileSize = x.FileSize,
+                    Id = x.Id,
+                    IsDefault = x.isDefault
+                }).ToListAsync();
         }
 
         public Task<int> RemoveImage(int imageId)

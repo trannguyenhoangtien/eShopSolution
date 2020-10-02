@@ -1,6 +1,5 @@
 ﻿using eShopSolution.Application.Dtos;
 using eShopSolution.ViewModels.Catalog.Products;
-using eShopSolution.ViewModels.Catalog.Products.Manage;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
