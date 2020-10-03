@@ -35,11 +35,16 @@ namespace eShopSolutionBackendApi
                 options.UseSqlServer(Configuration.GetConnectionString(SystemContains.MainConectionString)));
 
             //Declare DI
+            services.AddTransient<IStorageService, FileStorageService>();
+
             services.AddTransient<IPublicProductService, PublicProductService>();
             services.AddTransient<IManageProductService, ManageProductService>();
 
-            services.AddTransient<IStorageService, FileStorageService>();
             services.AddControllers();
+
+            //services.AddControllers().AddNewtonsoftJson(options =>
+            //    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            //);
 
             services.AddSwaggerGen(c =>
             {

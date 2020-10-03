@@ -14,6 +14,10 @@ namespace eShopSolution.Application.Common
 
         public FileStorageService(IWebHostEnvironment webHostEnvironment)
         {
+            if (string.IsNullOrWhiteSpace(webHostEnvironment.WebRootPath))
+            {
+                webHostEnvironment.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            }
             _userContentFolder = Path.Combine(webHostEnvironment.WebRootPath, USER_CONTENT_FOLDER_NAME);
         }
 

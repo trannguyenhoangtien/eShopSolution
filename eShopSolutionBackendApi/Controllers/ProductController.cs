@@ -21,10 +21,10 @@ namespace eShopSolutionBackendApi.Controllers
             _manageProductService = manageProductService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet("{languageId}")]
+        public async Task<IActionResult> Get(string languageId)
         {
-            var product = await _publicProductService.GetAll();
+            var product = await _publicProductService.GetAll(languageId);
             return Ok(product);
         }
 
@@ -35,10 +35,10 @@ namespace eShopSolutionBackendApi.Controllers
             return Ok(product);
         }
 
-        [HttpGet("{productId}")]
-        public async Task<IActionResult> GetById(int productId)
+        [HttpGet("{productId}/{languageId}")]
+        public async Task<IActionResult> GetById(int productId, string languageId)
         {
-            var product = await _manageProductService.GetById(productId);
+            var product = await _manageProductService.GetById(productId, languageId);
             if (product == null)
                 return BadRequest("Cannot find product");
 
@@ -46,19 +46,20 @@ namespace eShopSolutionBackendApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] ProductCreateRequest request)
+        public async Task<IActionResult> Create([FromForm] ProductCreateRequest request)
         {
             var productId = await _manageProductService.Create(request);
             if (productId == 0)
                 return BadRequest();
 
-            var product = _manageProductService.GetById(productId);
+            var product = await _manageProductService.GetById(productId, request.LanguageId);
 
-            return CreatedAtAction(nameof(GetById), new { id = productId }, productId);
+            //return CreatedAtAction(nameof(GetById), new { id = productId }, product);
+            return Ok(product);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] ProductUpdateRequest request)
+        public async Task<IActionResult> Update([FromForm] ProductUpdateRequest request)
         {
             var affectedResult = await _manageProductService.Update(request);
             if (affectedResult == 0)
@@ -77,8 +78,8 @@ namespace eShopSolutionBackendApi.Controllers
             return Ok();
         }
 
-        [HttpPut("price/{id}/{newPrice}")]
-        public async Task<IActionResult> Update([FromQuery] int productId, decimal newPrice)
+        [HttpPut("price/{productId}/{newPrice}")]
+        public async Task<IActionResult> Update(int productId, decimal newPrice)
         {
             var affectedResult = await _manageProductService.UpdatePrice(productId,newPrice);
             if (!affectedResult)

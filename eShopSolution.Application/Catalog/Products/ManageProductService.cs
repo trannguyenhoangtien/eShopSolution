@@ -120,6 +120,7 @@ namespace eShopSolution.Application.Catalog.Products
                         join pt in _context.ProductTranslations on p.Id equals pt.ProductId
                         join pic in _context.ProductInCategories on p.Id equals pic.ProductId
                         join c in _context.Categories on pic.CategoryId equals c.Id
+                        where pt.LanguageId == request.LanguageId
                         select new { p, pt, pic };
 
             if (!string.IsNullOrEmpty(request.Keyword))
@@ -158,9 +159,29 @@ namespace eShopSolution.Application.Catalog.Products
             return pagedResult;
         }
 
-        public Task<ProductViewModel> GetById(int productId)
+        public async Task<ProductViewModel> GetById(int productId, string languageId)
         {
-            throw new NotImplementedException();
+            var data = await (from p in _context.Products
+                        join pt in _context.ProductTranslations on p.Id equals pt.ProductId
+                        where p.Id == productId && pt.LanguageId == languageId
+                        select new ProductViewModel()
+                        {
+                            DateCreated = p.DateCreated,
+                            Description = pt.Description,
+                            Details = pt.Details,
+                            Id = p.Id,
+                            LanguageId = pt.LanguageId,
+                            Name = pt.Name,
+                            OriginalPrice = p.OriginalPrice,
+                            Price = p.Price,
+                            SeoAlias = pt.SeoAlias,
+                            SeoDescription = pt.SeoDescription,
+                            SeoTitle = pt.SeoTitle,
+                            Stock = p.Stock,
+                            ViewCount = p.ViewCount
+                        }).FirstOrDefaultAsync();
+
+            return data;
         }
 
         public async Task<List<ProductImageViewModel>> GetListImage(int productId)

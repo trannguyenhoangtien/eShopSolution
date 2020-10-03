@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.8" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
@@ -13,6 +15,10 @@
     <ProjectReference Include="..\eShopSolution.Data\eShopSolution.Data.csproj" />
     <ProjectReference Include="..\eShopSolution.Utilities\eShopSolution.Utilities.csproj" />
     <ProjectReference Include="..\eShopSolution.ViewModels\eShopSolution.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\user-content\" />
   </ItemGroup>
 
 
