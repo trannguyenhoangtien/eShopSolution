@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using eShopSolution.AdminApp.Services;
 using eShopSolution.ViewModels.System.Users;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +29,13 @@ namespace eShopSolution.AdminApp
         {
             services.AddHttpClient();
 
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/User/Login";
+                    options.AccessDeniedPath = "/User/Forbidden/";
+                });
+
             services.AddControllersWithViews()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
 
@@ -36,7 +44,7 @@ namespace eShopSolution.AdminApp
             IMvcBuilder builder = services.AddRazorPages();
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 #if DEBUG
-            if(env == Environments.Development)
+            if (env == Environments.Development)
             {
                 builder.AddRazorRuntimeCompilation();
             }
@@ -58,6 +66,8 @@ namespace eShopSolution.AdminApp
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseAuthentication();
 
             app.UseRouting();
 
