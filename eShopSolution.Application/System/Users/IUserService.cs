@@ -1,4 +1,5 @@
-﻿using eShopSolution.ViewModels.System.Users;
+﻿using eShopSolution.Application.Dtos;
+using eShopSolution.ViewModels.System.Users;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,7 @@ namespace eShopSolution.Application.System.Users
         Task<string> Authenticate(LoginRequest request);
 
         Task<IEnumerable<IdentityError>> Register(RegisterRequest request);
+
+        Task<PagedResult<UserVm>> GetUserPaging(GetUserPagingRequest request);
     }
 }
