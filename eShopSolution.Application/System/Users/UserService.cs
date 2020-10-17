@@ -1,5 +1,5 @@
-﻿using eShopSolution.Application.Dtos;
-using eShopSolution.Data.Entities;
+﻿using eShopSolution.Data.Entities;
+using eShopSolution.ViewModels.Common;
 using eShopSolution.ViewModels.System.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -64,7 +64,7 @@ namespace eShopSolution.Application.System.Users
 
         public async Task<PagedResult<UserVm>> GetUserPaging(GetUserPagingRequest request)
         {
-            var query = _userManager.Users.Where(x => request.Keyword == "" || x.UserName.Contains(request.Keyword)
+            var query = _userManager.Users.Where(x => request.Keyword == null || x.UserName.Contains(request.Keyword)
                     || x.PhoneNumber.Contains(request.Keyword));
 
             int totalRow = await query.CountAsync();

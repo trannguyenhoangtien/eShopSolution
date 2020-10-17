@@ -1,4 +1,4 @@
-﻿using eShopSolution.Application.Dtos;
+﻿using eShopSolution.ViewModels.Common;
 using eShopSolution.ViewModels.System.Users;
 using Microsoft.AspNetCore.Identity;
 using System;

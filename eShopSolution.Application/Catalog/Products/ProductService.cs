@@ -1,5 +1,4 @@
-﻿using eShopSolution.Application.Dtos;
-using eShopSolution.Data.EF;
+﻿using eShopSolution.Data.EF;
 using eShopSolution.Data.Entities;
 using eShopSolution.Utilities.Exceptions;
 using System;
@@ -14,6 +13,7 @@ using System.Net.Http.Headers;
 using System.IO;
 using eShopSolution.Application.Common;
 using eShopSolution.ViewModels.Catalog.ProductImages;
+using eShopSolution.ViewModels.Common;
 
 namespace eShopSolution.Application.Catalog.Products
 {
