@@ -31,7 +31,7 @@ namespace eShopSolution.Application.System.Users
             _config = config;
         }
 
-        public async Task<string> Authenticate(LoginRequest request)
+        public async Task<ResponseResult<string>> Authenticate(LoginRequest request)
         {
             var user = await _userManager.FindByNameAsync(request.UserName);
             if (user == null) return null;
@@ -59,10 +59,30 @@ namespace eShopSolution.Application.System.Users
                 expires: DateTime.Now.AddHours(3),
                 signingCredentials: creds);
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new ResponseSuccessResult<string>(new JwtSecurityTokenHandler().WriteToken(token));
         }
 
-        public async Task<PagedResult<UserVm>> GetUserPaging(GetUserPagingRequest request)
+        public async Task<ResponseResult<UserVm>> GetById(Guid id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+                return new ResponseErrorResult<UserVm>("User không tồn tại");
+
+            var userVm = new UserVm()
+            {
+                Email = user.Email,
+                FirstName = user.FirstName,
+                Id = user.Id,
+                LastName = user.LastName,
+                Phone = user.PhoneNumber,
+                UserName = user.UserName,
+                DOB = user.DOB
+            };
+
+            return new ResponseSuccessResult<UserVm>(userVm);
+        }
+
+        public async Task<ResponseResult<PagedResult<UserVm>>> GetUserPaging(GetUserPagingRequest request)
         {
             var query = _userManager.Users.Where(x => request.Keyword == null || x.UserName.Contains(request.Keyword)
                     || x.PhoneNumber.Contains(request.Keyword));
@@ -87,11 +107,20 @@ namespace eShopSolution.Application.System.Users
                 Items = data
             };
 
-            return pagedResult;
+            return new ResponseSuccessResult<PagedResult<UserVm>>(pagedResult);
         }
 
-        public async Task<IEnumerable<IdentityError>> Register(RegisterRequest request)
+        public async Task<ResponseResult<bool>> Register(RegisterRequest request)
         {
+            if (await _userManager.FindByNameAsync(request.UserName) != null)
+            {
+                return new ResponseErrorResult<bool>("Tài khoản đã tồn tại");
+            }
+            if (await _userManager.FindByEmailAsync(request.Email) != null)
+            {
+                return new ResponseErrorResult<bool>("Email đã tồn tại");
+            }
+
             var user = new AppUser()
             {
                 DOB = request.DOB,
@@ -104,9 +133,30 @@ namespace eShopSolution.Application.System.Users
 
             var result = await _userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded)
-                return result.Errors;
+                return new ResponseErrorResult<bool>(result.Errors.ToString());
 
-            return null;
+            return new ResponseSuccessResult<bool>();
+        }
+
+        public async Task<ResponseResult<bool>> Update(Guid id, UserUpdateRequest request)
+        {
+            if (await _userManager.Users.AnyAsync(x => x.Email == request.Email && x.Id != id))
+            {
+                return new ResponseErrorResult<bool>("Email đã tồn tại");
+            }
+
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            user.DOB = request.DOB;
+            user.Email = request.Email;
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.PhoneNumber = request.PhoneNumber;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+                return new ResponseErrorResult<bool>(result.Errors.ToString());
+
+            return new ResponseSuccessResult<bool>();
         }
     }
 }
