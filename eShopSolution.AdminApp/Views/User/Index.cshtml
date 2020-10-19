@@ -25,10 +25,9 @@
         </div>
         <div class="card-body">
             <div class="table-responsive table-bordered">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Id</th>
                             <th>Họ</th>
                             <th>Tên</th>
                             <th>Tên đăng nhập</th>
@@ -39,7 +38,6 @@
                     </thead>
                     <tfoot>
                         <tr>
-                            <th>Id</th>
                             <th>Họ</th>
                             <th>Tên</th>
                             <th>Tên đăng nhập</th>
@@ -52,9 +50,6 @@
                         @foreach (var item in Model.Items)
                         {
                             <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Id)
-                                </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.LastName)
                                 </td>
@@ -80,6 +75,7 @@
                     </tbody>
                 </table>
             </div>
+            @await Component.InvokeAsync("Pager", Model)
         </div>
     </div>
 </div>

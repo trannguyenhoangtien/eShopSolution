@@ -22,7 +22,7 @@ namespace eShopSolution.AdminApp.Controllers
             _configuration = configuration;
         }
 
-        public async Task<IActionResult> Index(string keyword = "", int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(string keyword = "", int pageIndex = 1, int pageSize = 1)
         {
             var request = new GetUserPagingRequest()
             {
