@@ -34,11 +34,11 @@ namespace eShopSolution.Application.System.Users
         public async Task<ResponseResult<string>> Authenticate(LoginRequest request)
         {
             var user = await _userManager.FindByNameAsync(request.UserName);
-            if (user == null) return null;
+            if (user == null) return new ResponseErrorResult<string>("Tài khoản hoặc mật khẩu không đúng");
 
             var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
             if (!result.Succeeded)
-                return null;
+                return new ResponseErrorResult<string>("Tài khoản hoặc mật khẩu không đúng");
 
             var roles = await _userManager.GetRolesAsync(user);
             var claims = new[]
@@ -60,6 +60,19 @@ namespace eShopSolution.Application.System.Users
                 signingCredentials: creds);
 
             return new ResponseSuccessResult<string>(new JwtSecurityTokenHandler().WriteToken(token));
+        }
+
+        public async Task<ResponseResult<bool>> Delete(Guid id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+                return new ResponseErrorResult<bool>("User không tồn tại");
+
+            var result = await _userManager.DeleteAsync(user);
+            if(result.Succeeded)
+                return new ResponseSuccessResult<bool>();
+
+            return new ResponseErrorResult<bool>("Xóa không thành công");
         }
 
         public async Task<ResponseResult<UserVm>> GetById(Guid id)

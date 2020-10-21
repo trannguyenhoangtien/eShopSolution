@@ -22,7 +22,7 @@ namespace eShopSolution.AdminApp.Controllers
             _configuration = configuration;
         }
 
-        public async Task<IActionResult> Index(string keyword = "", int pageIndex = 1, int pageSize = 1)
+        public async Task<IActionResult> Index(string keyword = "", int pageIndex = 1, int pageSize = 10)
         {
             var request = new GetUserPagingRequest()
             {
@@ -108,6 +108,22 @@ namespace eShopSolution.AdminApp.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.Session.Remove("Token");
             return RedirectToAction("Index", "Login");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            return View(new UserDeleteRequest() { Id = id });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(UserDeleteRequest request)
+        {
+            var result = await _userApiClient.Delete(request.Id);
+            if (result.IsSuccess)
+                return RedirectToAction("Index");
+
+            return View();
         }
     }
 }
