@@ -81,6 +81,7 @@ namespace eShopSolution.Application.System.Users
             if (user == null)
                 return new ResponseErrorResult<UserVm>("User không tồn tại");
 
+            var roles = await _userManager.GetRolesAsync(user);
             var userVm = new UserVm()
             {
                 Email = user.Email,
@@ -89,7 +90,8 @@ namespace eShopSolution.Application.System.Users
                 LastName = user.LastName,
                 Phone = user.PhoneNumber,
                 UserName = user.UserName,
-                DOB = user.DOB
+                DOB = user.DOB,
+                Roles = roles
             };
 
             return new ResponseSuccessResult<UserVm>(userVm);
@@ -149,6 +151,33 @@ namespace eShopSolution.Application.System.Users
             var result = await _userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded)
                 return new ResponseErrorResult<bool>(result.Errors.ToString());
+
+            return new ResponseSuccessResult<bool>();
+        }
+
+        public async Task<ResponseResult<bool>> RoleAssign(Guid id, RoleAssignRequest request)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+                return new ResponseErrorResult<bool>("User không tồn tại");
+
+            var removeRoles = request.Roles.Where(x => x.Selected == false).Select(x => x.Name).ToList();
+            foreach (var roleName in removeRoles)
+            {
+                if (await _userManager.IsInRoleAsync(user, roleName))
+                {
+                    await _userManager.RemoveFromRoleAsync(user, roleName);
+                }
+            }
+
+            var addRoles = request.Roles.Where(x => x.Selected).Select(x => x.Name).ToList();
+            foreach (var roleName in addRoles)
+            {
+                if(!await _userManager.IsInRoleAsync(user, roleName))
+                {
+                    await _userManager.AddToRoleAsync(user, roleName);
+                }
+            }
 
             return new ResponseSuccessResult<bool>();
         }

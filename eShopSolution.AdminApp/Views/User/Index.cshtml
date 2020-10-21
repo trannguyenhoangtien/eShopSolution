@@ -21,11 +21,11 @@
     <div class="card mb-12">
         <div class="card-header">
             <div class="row">
-                <div class="col-md-6 col-xs-12">
+                <div class="col-md-8 col-xs-12">
                     <i class="fas fa-table mr-1"></i>
                     <a asp-action="Create" asp-controller="User" class="btn btn-success">Tạo mới</a>
                 </div>
-                <div class="col-md-6 col-xs-12">
+                <div class="col-md-4 col-xs-12">
                     <form asp-action="Index" method="get">
                         <div class="input-group input-group-md">
                             <input class="form-control" name="keyword" value="@ViewBag.Keyword" type="text" />
@@ -86,9 +86,10 @@
                                     @Html.DisplayFor(modelItem => item.Email)
                                 </td>
                                 <td>
-                                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                                    @Html.ActionLink("Sửa", "Edit", new { id = item.Id }) |
+                                    @Html.ActionLink("Xem", "Details", new { id = item.Id }) |
+                                    @Html.ActionLink("Xóa", "Delete", new { id = item.Id }) |
+                                    @Html.ActionLink("Phân quyền", "RoleAssign", new { id = item.Id })
                                 </td>
                             </tr>
                         }
