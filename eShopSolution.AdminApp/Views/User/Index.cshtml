@@ -28,7 +28,7 @@
                 <div class="col-md-6 col-xs-12">
                     <form asp-action="Index" method="get">
                         <div class="input-group input-group-md">
-                            <input class="form-control" name="keyword" value="@ViewBag.keyword" type="text" />
+                            <input class="form-control" name="keyword" value="@ViewBag.Keyword" type="text" />
                             <span class="input-group-btn">
                                 <button type="submit" class="btn btn-primary btn-flat">Tìm</button>
                             </span>
@@ -38,6 +38,12 @@
             </div>
         </div>
         <div class="card-body">
+            @if(ViewBag.SuccessMsg != null)
+            {
+                <div id="msgAlert" class="alert alert-success" role="alert">
+                    @ViewBag.SuccessMsg
+                </div>
+            }
             <div class="table-responsive table-bordered">
                 <table class="table table-bordered" width="100%" cellspacing="0">
                     <thead>
@@ -93,3 +99,11 @@
         </div>
     </div>
 </div>
+
+@section Scripts{ 
+    <script>
+        setTimeout(function () {
+            $("#msgAlert").fadeOut('slow');
+        }, 2000);
+    </script>
+}
