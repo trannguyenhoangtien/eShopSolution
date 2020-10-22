@@ -22,7 +22,7 @@ namespace eShopSolution.AdminApp.Controllers.Components
                 CurrentLanguage = HttpContext.Session.GetString(SystemContains.AppSettings.DefaultLanguageId),
                 Languages = languages.ResultObj
             };
-            return View("Defatult", navigationVm);
+            return View("Default", navigationVm);
         }
     }
 }

@@ -14,14 +14,16 @@ namespace eShopSolution.Application.System.Languages
     {
         private readonly IConfiguration _configurable;
         private readonly EShopDbContext _context;
+
         public LanguageService(IConfiguration configuration, EShopDbContext context)
         {
             _configurable = configuration;
             _context = context;
         }
-        public Task<ResponseSuccessResult<List<LanguageVm>>> GetAll()
+
+        public async Task<ResponseSuccessResult<List<LanguageVm>>> GetAll()
         {
-            var languages = _context.Languages.Select(x => new LanguageVm()
+            var languages = await _context.Languages.Select(x => new LanguageVm()
             {
                 Id = x.Id,
                 Name = x.Name
