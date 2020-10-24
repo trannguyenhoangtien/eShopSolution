@@ -17,10 +17,10 @@ namespace eShopSolution.AdminApp.Services
         {
         }
 
-        public async Task<ResponseResult<PagedResult<ProductVm>>> GetProductPagings(GetProductPagingRequest request)
+        public async Task<PagedResult<ProductVm>> GetProductPagings(GetProductPagingRequest request)
         {
-            string url = $"/api/products/paging?pageIndex={request.PageIndex}&pageSize={request.PageSize}&keyword={request.Keyword}";
-            return await GetAsync<ResponseResult<PagedResult<ProductVm>>>(url);
+            string url = $"/api/products/paging?pageIndex={request.PageIndex}&pageSize={request.PageSize}&keyword={request.Keyword}&languageId={request.LanguageId}";
+            return await GetAsync<PagedResult<ProductVm>>(url);
         }
     }
 }
