@@ -1,9 +1,11 @@
-﻿using eShopSolution.ViewModels.Common;
+﻿using eShopSolution.ViewModels.Catalog.Products;
+using eShopSolution.ViewModels.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
