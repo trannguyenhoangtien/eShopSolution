@@ -49,10 +49,10 @@ namespace eShopSolutionBackendApi.Controllers
                 return BadRequest(ModelState);
             }
             var productId = await _productService.Create(request);
-            if (productId == 0)
-                return BadRequest();
+            if (productId.ResultObj == 0)
+                return BadRequest(productId.Message);
 
-            var product = await _productService.GetById(productId, request.LanguageId);
+            var product = await _productService.GetById(productId.ResultObj, request.LanguageId);
 
             //return CreatedAtAction(nameof(GetById), new { id = productId }, product);
             return Ok(product);
@@ -66,8 +66,8 @@ namespace eShopSolutionBackendApi.Controllers
                 return BadRequest(ModelState);
             }
             var affectedResult = await _productService.Update(request);
-            if (affectedResult == 0)
-                return BadRequest();
+            if (affectedResult.ResultObj == 0)
+                return BadRequest(affectedResult.Message);
 
             return Ok();
         }
@@ -76,8 +76,8 @@ namespace eShopSolutionBackendApi.Controllers
         public async Task<IActionResult> Delete(int productId)
         {
             var affectedResult = await _productService.Delete(productId);
-            if (affectedResult == 0)
-                return BadRequest();
+            if (affectedResult.ResultObj == 0)
+                return BadRequest(affectedResult.Message);
 
             return Ok();
         }
@@ -150,5 +150,18 @@ namespace eShopSolutionBackendApi.Controllers
         }
 
         #endregion Images
+
+        [HttpPut("{id}/roles")]
+        public async Task<IActionResult> CategoryAssign(int id, [FromBody] CategoryAssignRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _productService.CategoryAssign(id, request);
+            if (!result.IsSuccess)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
     }
 }

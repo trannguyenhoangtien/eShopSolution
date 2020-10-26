@@ -3,6 +3,7 @@ using eShopSolution.ViewModels.Catalog.Products;
 using eShopSolution.ViewModels.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +18,7 @@ namespace eShopSolution.AdminApp.Services
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
+
         public ProductApiClient(IHttpClientFactory httpClientFactory, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
             : base(httpClientFactory, configuration, httpContextAccessor)
         {
@@ -25,7 +27,13 @@ namespace eShopSolution.AdminApp.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<bool> CreateProduct(ProductCreateRequest request)
+        public async Task<ResponseResult<bool>> CategoryAssign(int id, CategoryAssignRequest request)
+        {
+            var json = JsonConvert.SerializeObject(request);
+            return await PutAsync<ResponseResult<bool>>($"/api/products/{id}/categories", json);
+        }
+
+        public async Task<ResponseResult<bool>> CreateProduct(ProductCreateRequest request)
         {
             var session = _httpContextAccessor.HttpContext.Session.GetString("Token");
             var client = _httpClientFactory.CreateClient();
@@ -57,7 +65,20 @@ namespace eShopSolution.AdminApp.Services
             requestContent.Add(new StringContent(languageId), "LanguageId");
 
             var response = await client.PostAsync($"/api/products", requestContent);
-            return response.IsSuccessStatusCode;
+            var body = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                return new ResponseSuccessResult<bool>(response.IsSuccessStatusCode);
+            }
+
+            //return new ResponseErrorResult<bool>(body);
+            return JsonConvert.DeserializeObject<ResponseErrorResult<bool>>(body);
+        }
+
+        public async Task<ResponseResult<ProductVm>> GetById(int id, string languageId)
+        {
+            string url = $"/api/products/{id}/{languageId}";
+            return await GetAsync<ResponseResult<ProductVm>>(url);
         }
 
         public async Task<PagedResult<ProductVm>> GetProductPagings(GetProductPagingRequest request)

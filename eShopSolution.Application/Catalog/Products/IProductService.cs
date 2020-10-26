@@ -9,11 +9,11 @@ namespace eShopSolution.Application.Catalog.Products
 {
     public interface IProductService
     {
-        Task<int> Create(ProductCreateRequest request);
+        Task<ResponseResult<int>> Create(ProductCreateRequest request);
 
-        Task<int> Update(ProductUpdateRequest request);
+        Task<ResponseResult<int>> Update(ProductUpdateRequest request);
 
-        Task<int> Delete(int productId);
+        Task<ResponseResult<int>> Delete(int productId);
 
         Task<ProductVm> GetById(int productId, string languageId);
 
@@ -38,5 +38,7 @@ namespace eShopSolution.Application.Catalog.Products
         Task<ProductImageViewModel> GetImageById(int imageId);
 
         Task<PagedResult<ProductVm>> GetAllByCategoryId(GetClientProductPagingRequest request, string languageId);
+
+        Task<ResponseResult<bool>> CategoryAssign(int id, CategoryAssignRequest request);
     }
 }
