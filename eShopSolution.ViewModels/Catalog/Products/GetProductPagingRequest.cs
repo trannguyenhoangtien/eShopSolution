@@ -9,6 +9,6 @@ namespace eShopSolution.ViewModels.Catalog.Products
     {
         public string LanguageId { get; set; }
         public string Keyword { get; set; }
-        public List<int> CategoryIds { get; set; }
+        public int? CategoryId { get; set; }
     }
 }
