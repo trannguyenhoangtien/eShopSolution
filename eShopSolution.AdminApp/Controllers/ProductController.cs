@@ -97,7 +97,7 @@ namespace eShopSolution.AdminApp.Controllers
             var result = await _productApiClient.CategoryAssign(request.Id, request);
             if (result.IsSuccess)
             {
-                TempData["result"] = "Cập nhật nhóm sản phẩm thành công";
+                TempData["result"] = "Cập nhật danh mục sản phẩm thành công";
                 return RedirectToAction("Index");
             }
 

@@ -80,29 +80,48 @@ namespace eShopSolution.Application.Catalog.Products
 
         public async Task<ResponseResult<bool>> CategoryAssign(int id, CategoryAssignRequest request)
         {
-            var user = await _context.Products.FindAsync(id);
-            if (user == null)
-                return new ResponseErrorResult<bool>("Sản phẩm không tồn tại");
-
-            var removeRoles = request.Categories.Where(x => x.Selected == false).Select(x => x.Name).ToList();
-            foreach (var roleName in removeRoles)
+            try
             {
-                if (await _userManager.IsInRoleAsync(user, roleName))
-                {
-                    await _userManager.RemoveFromRoleAsync(user, roleName);
-                }
-            }
 
-            var addRoles = request.Roles.Where(x => x.Selected).Select(x => x.Name).ToList();
-            foreach (var roleName in addRoles)
+
+                var user = await _context.Products.FindAsync(id);
+                if (user == null)
+                    return new ResponseErrorResult<bool>("Sản phẩm không tồn tại");
+
+                var removeCategories = request.Categories.Where(x => x.Selected == false).ToList();
+                if (removeCategories.Count > 0)
+                {
+                    var cateIds = removeCategories.Select(x => x.Id).ToList();
+                    var productInCategory = await _context.ProductInCategories
+                        .Where(x => cateIds.Contains(x.CategoryId.ToString()) && x.ProductId == id)
+                        .ToListAsync();
+                    if (productInCategory.Count > 0)
+                    {
+                        _context.ProductInCategories.RemoveRange(productInCategory);
+                    }
+                }
+
+                var addCategories = request.Categories.Where(x => x.Selected).ToList();
+                foreach (var category in addCategories)
+                {
+                    var cateIds = addCategories.Select(x => x.Id).ToList();
+                    var productInCategory = await _context.ProductInCategories
+                        .Where(x => cateIds.Contains(x.CategoryId.ToString()) && x.ProductId == id)
+                        .ToListAsync();
+                    if (productInCategory.Count > 0)
+                    {
+                        await _context.ProductInCategories.AddRangeAsync(productInCategory);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+
+                return new ResponseSuccessResult<bool>();
+            }
+            catch (Exception ex)
             {
-                if (!await _userManager.IsInRoleAsync(user, roleName))
-                {
-                    await _userManager.AddToRoleAsync(user, roleName);
-                }
+                return new ResponseErrorResult<bool>(ex.InnerException.Message);
             }
-
-            return new ResponseSuccessResult<bool>();
         }
 
         public async Task<ResponseResult<int>> Create(ProductCreateRequest request)
@@ -276,7 +295,7 @@ namespace eShopSolution.Application.Catalog.Products
             return pagedResult;
         }
 
-        public async Task<ProductVm> GetById(int productId, string languageId)
+        public async Task<ResponseResult<ProductVm>> GetById(int productId, string languageId)
         {
             var categories = await (from pic in _context.ProductInCategories
                                     join c in _context.Categories on pic.CategoryId equals c.Id
@@ -309,7 +328,7 @@ namespace eShopSolution.Application.Catalog.Products
                                   Categories = categories
                               }).FirstOrDefaultAsync();
 
-            return data;
+            return new ResponseSuccessResult<ProductVm>(data);
         }
 
         public async Task<ProductImageViewModel> GetImageById(int imageId)

@@ -151,7 +151,7 @@ namespace eShopSolutionBackendApi.Controllers
 
         #endregion Images
 
-        [HttpPut("{id}/roles")]
+        [HttpPut("{id}/categories")]
         public async Task<IActionResult> CategoryAssign(int id, [FromBody] CategoryAssignRequest request)
         {
             if (!ModelState.IsValid)
