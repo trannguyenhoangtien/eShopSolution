@@ -21,5 +21,7 @@
 ## How to contribute
 - Fork and create your branch
 - Create Pull request to us.
-## Admin template: https://startbootstrap.com/templates/sb-admin/
-## Portal template: https://www.free-css.com/free-css-templates/page194/bootstrap-shop
+## Admin template: 
+- Source: https://startbootstrap.com/templates/sb-admin/
+## Portal template: 
+- Source: https://www.free-css.com/free-css-templates/page194/bootstrap-shop
