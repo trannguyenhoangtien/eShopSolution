@@ -82,10 +82,8 @@ namespace eShopSolution.Application.Catalog.Products
         {
             try
             {
-
-
-                var user = await _context.Products.FindAsync(id);
-                if (user == null)
+                var product = await _context.Products.FindAsync(id);
+                if (product == null)
                     return new ResponseErrorResult<bool>("Sản phẩm không tồn tại");
 
                 var removeCategories = request.Categories.Where(x => x.Selected == false).ToList();
@@ -104,13 +102,15 @@ namespace eShopSolution.Application.Catalog.Products
                 var addCategories = request.Categories.Where(x => x.Selected).ToList();
                 foreach (var category in addCategories)
                 {
-                    var cateIds = addCategories.Select(x => x.Id).ToList();
                     var productInCategory = await _context.ProductInCategories
-                        .Where(x => cateIds.Contains(x.CategoryId.ToString()) && x.ProductId == id)
-                        .ToListAsync();
-                    if (productInCategory.Count > 0)
+                        .FirstOrDefaultAsync(x => x.CategoryId == int.Parse(category.Id) && x.ProductId == id);
+
+                    if (productInCategory == null)
                     {
-                        await _context.ProductInCategories.AddRangeAsync(productInCategory);
+                        productInCategory = new ProductInCategory();
+                        productInCategory.CategoryId = int.Parse(category.Id);
+                        productInCategory.ProductId = id;
+                        await _context.ProductInCategories.AddAsync(productInCategory);
                     }
                 }
 
@@ -120,7 +120,7 @@ namespace eShopSolution.Application.Catalog.Products
             }
             catch (Exception ex)
             {
-                return new ResponseErrorResult<bool>(ex.InnerException.Message);
+                return new ResponseErrorResult<bool>(ex.Message);
             }
         }
 
@@ -253,6 +253,8 @@ namespace eShopSolution.Application.Catalog.Products
                         from pic in ppic.DefaultIfEmpty()
                         join c in _context.Categories on pic.CategoryId equals c.Id into cpic
                         from c in cpic.DefaultIfEmpty()
+                            //join ct in _context.CategoryTranslations on c.Id equals ct.CategoryId into ctc
+                            //from ct in ctc.DefaultIfEmpty()
                         where pt.LanguageId == request.LanguageId
                         select new { p, pt, pic };
 

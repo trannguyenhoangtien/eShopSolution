@@ -33,33 +33,40 @@ namespace eShopSolution.Application.System.Users
 
         public async Task<ResponseResult<string>> Authenticate(LoginRequest request)
         {
-            var user = await _userManager.FindByNameAsync(request.UserName);
-            if (user == null) return new ResponseErrorResult<string>("Tài khoản hoặc mật khẩu không đúng");
-
-            var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
-            if (!result.Succeeded)
-                return new ResponseErrorResult<string>("Tài khoản hoặc mật khẩu không đúng");
-
-            var roles = await _userManager.GetRolesAsync(user);
-            var claims = new[]
+            try
             {
+                var user = await _userManager.FindByNameAsync(request.UserName);
+                if (user == null) return new ResponseErrorResult<string>("Tài khoản hoặc mật khẩu không đúng");
+
+                var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
+                if (!result.Succeeded)
+                    return new ResponseErrorResult<string>("Tài khoản hoặc mật khẩu không đúng");
+
+                var roles = await _userManager.GetRolesAsync(user);
+                var claims = new[]
+                {
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.GivenName, user.FirstName),
                 new Claim(ClaimTypes.Role, string.Join(";", roles)),
                 new Claim(ClaimTypes.Name, string.Join(";", request.UserName)),
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken(
-                _config["Tokens:Issuer"],
-                _config["Tokens:Issuer"],
-                claims,
-                expires: DateTime.Now.AddHours(3),
-                signingCredentials: creds);
+                var token = new JwtSecurityToken(
+                    _config["Tokens:Issuer"],
+                    _config["Tokens:Issuer"],
+                    claims,
+                    expires: DateTime.Now.AddHours(3),
+                    signingCredentials: creds);
 
-            return new ResponseSuccessResult<string>(new JwtSecurityTokenHandler().WriteToken(token));
+                return new ResponseSuccessResult<string>(new JwtSecurityTokenHandler().WriteToken(token));
+            }
+            catch (Exception ex)
+            {
+                return new ResponseErrorResult<string>(ex.Message);
+            }
         }
 
         public async Task<ResponseResult<bool>> Delete(Guid id)
@@ -69,7 +76,7 @@ namespace eShopSolution.Application.System.Users
                 return new ResponseErrorResult<bool>("User không tồn tại");
 
             var result = await _userManager.DeleteAsync(user);
-            if(result.Succeeded)
+            if (result.Succeeded)
                 return new ResponseSuccessResult<bool>();
 
             return new ResponseErrorResult<bool>("Xóa không thành công");
@@ -173,7 +180,7 @@ namespace eShopSolution.Application.System.Users
             var addRoles = request.Roles.Where(x => x.Selected).Select(x => x.Name).ToList();
             foreach (var roleName in addRoles)
             {
-                if(!await _userManager.IsInRoleAsync(user, roleName))
+                if (!await _userManager.IsInRoleAsync(user, roleName))
                 {
                     await _userManager.AddToRoleAsync(user, roleName);
                 }

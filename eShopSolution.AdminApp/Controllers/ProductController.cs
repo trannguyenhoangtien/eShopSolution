@@ -91,8 +91,9 @@ namespace eShopSolution.AdminApp.Controllers
         [HttpPost]
         public async Task<IActionResult> CategoryAssign(CategoryAssignRequest request)
         {
+            var roleAssignRequest = await GetCategoryAssignRequest(request.Id);
             if (!ModelState.IsValid)
-                return View(request);
+                return View(roleAssignRequest);
 
             var result = await _productApiClient.CategoryAssign(request.Id, request);
             if (result.IsSuccess)
@@ -102,7 +103,7 @@ namespace eShopSolution.AdminApp.Controllers
             }
 
             ModelState.AddModelError("", result.Message);
-            var roleAssignRequest = GetCategoryAssignRequest(request.Id);
+            
             return View(roleAssignRequest);
         }
 

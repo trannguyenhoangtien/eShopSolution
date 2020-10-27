@@ -21,7 +21,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <form asp-action="CategoryAssign">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div asp-validation-summary="All" class="text-danger"></div>
                         <input type="hidden" asp-for="Id" />
                         @for (var i = 0; i < Model.Categories.Count; i++)
                         {
