@@ -40,12 +40,11 @@
                 <div class="span6">Welcome!<strong> User</strong></div>
                 <div class="span6">
                     <div class="pull-right">
-                        @*<a href="product_summary.html"><span class="">Vi</span></a>
-                            <a href="product_summary.html"><span class="">En</span></a>
-                            <span class="btn btn-mini">En</span>
-                            <a href="product_summary.html"><span>&pound;</span></a>
-                            <span class="btn btn-mini">$155.00</span>
-                            <a href="product_summary.html"><span class="">$</span></a>*@
+                        @*<a href="/vi/Home/SetCultureCookie?cltr=en&returnUrl=/vi"><span class="">Vi</span></a>
+                        <a href="/en/Home/SetCultureCookie?cltr=vi&returnUrl=/en"><span class="">En</span></a>*@
+                        @*<a asp-action="SetCultureCookie" asp-controller="Home" asp-route="@culture"><span class="">Vi</span></a>
+                        <a asp-action="SetCultureCookie" asp-controller="Home" asp-route="@culture"><span class="">En</span></a>*@
+
                         <language-nav cookie-handler-url="@Url.Action("SetCultureCookie", "Home", new { area="", cltr="{0}", returnUrl="{1}" })"></language-nav>
                         <a href="product_summary.html"><span class="btn btn-mini btn-primary"><i class="icon-shopping-cart icon-white"></i> [ 3 ] Itemes in your cart </span> </a>
                     </div>
