@@ -15,6 +15,7 @@ namespace eShopSolution.ViewModels.Catalog.Products
         public string SeoTitle { get; set; }
         public string SeoAlias { get; set; }
         public string LanguageId { get; set; }
+        public bool? IsFeturead { get; set; }
         public IFormFile ThumbnailImage { get; set; }
     }
 }

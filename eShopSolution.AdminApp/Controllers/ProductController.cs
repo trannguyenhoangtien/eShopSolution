@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using eShopSolution.AdminApp.Services;
+using eShopSolution.ApiIntegration;
 using eShopSolution.Utilities.Constaints;
 using eShopSolution.ViewModels.Catalog.Products;
 using eShopSolution.ViewModels.Common;
@@ -103,7 +103,7 @@ namespace eShopSolution.AdminApp.Controllers
             }
 
             ModelState.AddModelError("", result.Message);
-            
+
             return View(roleAssignRequest);
         }
 

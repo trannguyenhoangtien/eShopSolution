@@ -1,4 +1,4 @@
-﻿using eShopSolution.AdminApp.Services;
+﻿using eShopSolution.ApiIntegration;
 using eShopSolution.ViewModels.Common;
 using eShopSolution.ViewModels.System.Users;
 using Microsoft.AspNetCore.Authentication;
@@ -39,7 +39,7 @@ namespace eShopSolution.AdminApp.Controllers
             var data = await _userApiClient.GetUserPagings(request);
 
             ViewBag.Keyword = keyword;
-            if(TempData["result"] != null)
+            if (TempData["result"] != null)
             {
                 ViewBag.SuccessMsg = TempData["result"];
             }
@@ -167,7 +167,7 @@ namespace eShopSolution.AdminApp.Controllers
 
             ModelState.AddModelError("", result.Message);
             var roleAssignRequest = GetRoleAssignRequest(request.Id);
-            return View(roleAssignRequest); 
+            return View(roleAssignRequest);
         }
 
         private async Task<RoleAssignRequest> GetRoleAssignRequest(Guid id)
