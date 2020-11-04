@@ -9,6 +9,9 @@ using eShopSolution.WebApp.Models;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Http;
 using LazZiya.ExpressLocalization;
+using eShopSolution.ApiIntegration;
+using System.Globalization;
+using eShopSolution.Utilities.Constaints;
 
 namespace eShopSolution.WebApp.Controllers
 {
@@ -16,16 +19,30 @@ namespace eShopSolution.WebApp.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ISharedCultureLocalizer _loc;
+        private readonly ISlideApiClient _slideApiClient;
+        private readonly IProductApiClient _productApiClient;
 
-        public HomeController(ILogger<HomeController> logger, ISharedCultureLocalizer loc)
+        public HomeController(ILogger<HomeController> logger,
+            ISharedCultureLocalizer loc,
+            ISlideApiClient slideApiClient,
+            IProductApiClient productApiClient)
         {
             _logger = logger;
             _loc = loc;
+            _slideApiClient = slideApiClient;
+            _productApiClient = productApiClient;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var culture = CultureInfo.CurrentCulture.Name;
+            var viewModel = new HomeViewModel()
+            {
+                Slides = await _slideApiClient.GetAll(),
+                FeaturedProducts = await _productApiClient.GetFeaturedProducts(culture, SystemContains.ProductSettings.NumberOfFeaturedProduct)
+            };
+
+            return View(viewModel);
         }
 
         public IActionResult Privacy()

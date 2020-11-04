@@ -137,4 +137,8 @@
     <value>Khuyến mãi</value>
     <comment>Layout</comment>
   </data>
+  <data name="VIEW" xml:space="preserve">
+    <value>XEM</value>
+    <comment>Home/Index</comment>
+  </data>
 </root>

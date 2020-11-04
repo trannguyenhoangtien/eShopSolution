@@ -52,6 +52,7 @@ namespace eShopSolution.AdminApp
             services.AddTransient<ILanguageApiClient, LanguageApiClient>();
             services.AddTransient<IProductApiClient, ProductApiClient>();
             services.AddTransient<ICategoryApiClient, CategoryApiClient>();
+            services.AddTransient<ISlideApiClient, SlideApiClient>();
 
             IMvcBuilder builder = services.AddRazorPages();
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");

@@ -12,12 +12,10 @@ namespace eShopSolution.Application.System.Languages
 {
     public class LanguageService : ILanguageService
     {
-        private readonly IConfiguration _configurable;
         private readonly EShopDbContext _context;
 
-        public LanguageService(IConfiguration configuration, EShopDbContext context)
+        public LanguageService(EShopDbContext context)
         {
-            _configurable = configuration;
             _context = context;
         }
 

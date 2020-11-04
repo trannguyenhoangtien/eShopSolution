@@ -21,6 +21,7 @@ namespace eShopSolution.ViewModels.Catalog.Products
         public string SeoAlias { get; set; }
         public string LanguageId { set; get; }
         public bool? IsFeturead { get; set; }
+        public string ThumbnailImage { get; set; }
         public List<CategoryVm> Categories { get; set; } = new List<CategoryVm>();
     }
 }
