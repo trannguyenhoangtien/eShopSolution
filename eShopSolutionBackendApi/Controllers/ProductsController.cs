@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using eShopSolution.Application.Catalog.Products;
+﻿using eShopSolution.Application.Catalog.Products;
 using eShopSolution.ViewModels.Catalog.ProductImages;
 using eShopSolution.ViewModels.Catalog.Products;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace eShopSolutionBackendApi.Controllers
 {
@@ -45,6 +41,15 @@ namespace eShopSolutionBackendApi.Controllers
         public async Task<IActionResult> GetFeatured(string languageId, int take)
         {
             var products = await _productService.GetFeaturedProducts(languageId, take);
+
+            return Ok(products);
+        }
+
+        [HttpGet("latest/{languageId}/{take}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetLatest(string languageId, int take)
+        {
+            var products = await _productService.GetLatestProducts(languageId, take);
 
             return Ok(products);
         }
