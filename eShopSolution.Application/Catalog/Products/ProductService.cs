@@ -375,6 +375,48 @@ namespace eShopSolution.Application.Catalog.Products
             return null;
         }
 
+        public async Task<List<ProductVm>> GetLastestProducts(string languageId, int take)
+        {
+            try
+            {
+                var query = from p in _context.Products
+                            join pt in _context.ProductTranslations on p.Id equals pt.ProductId
+                            join pic in _context.ProductInCategories on p.Id equals pic.ProductId into ppic
+                            //join pi in _context.ProductImages.Where(x => x.isDefault == true) on p.Id equals pi.ProductId
+                            from pic in ppic.DefaultIfEmpty()
+                            join c in _context.Categories on pic.CategoryId equals c.Id into cpic
+                            from c in cpic.DefaultIfEmpty()
+                                //join ct in _context.CategoryTranslations on c.Id equals ct.CategoryId into ctc
+                                //from ct in ctc.DefaultIfEmpty()
+                            where pt.LanguageId == languageId
+                            select new { p, pt, pic };
+
+                var data = await query.OrderByDescending(x => x.p.DateCreated).Take(take).Select(x => new ProductVm()
+                {
+                    Id = x.p.Id,
+                    Name = x.pt.Name,
+                    DateCreated = x.p.DateCreated,
+                    Description = x.pt.Description,
+                    Details = x.pt.Details,
+                    LanguageId = x.pt.LanguageId,
+                    OriginalPrice = x.p.OriginalPrice,
+                    Price = x.p.Price,
+                    SeoAlias = x.pt.SeoAlias,
+                    SeoDescription = x.pt.SeoDescription,
+                    SeoTitle = x.pt.SeoTitle,
+                    Stock = x.p.Stock,
+                    ViewCount = x.p.ViewCount,
+                    ThumbnailImage = (from pi in _context.ProductImages.Where(y => y.ProductId == x.p.Id) select pi.ImagePath).FirstOrDefault()
+                }).ToListAsync();
+
+                return data;
+            }
+            catch (Exception ex)
+            {
+            }
+            return null;
+        }
+
         public async Task<ProductImageViewModel> GetImageById(int imageId)
         {
             var productImage = await _context.ProductImages.FindAsync(imageId);

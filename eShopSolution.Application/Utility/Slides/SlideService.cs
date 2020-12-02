@@ -21,15 +21,17 @@ namespace eShopSolution.Application.Utility.Slides
 
         public async Task<List<SlideVm>> GetAll()
         {
-            var slides = await _context.Slides.Select(x => new SlideVm()
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Description = x.Description,
-                Image = x.Image,
-                SortOrder = x.SortOrder,
-                Url = x.Url
-            }).ToListAsync();
+            var slides = await _context.Slides
+                .OrderBy(x => x.SortOrder)
+                .Select(x => new SlideVm()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description,
+                    Image = x.Image,
+                    SortOrder = x.SortOrder,
+                    Url = x.Url
+                }).ToListAsync();
 
             return slides;
         }

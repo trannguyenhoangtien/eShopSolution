@@ -87,6 +87,12 @@ namespace eShopSolution.ApiIntegration
             return await GetAsync<List<ProductVm>>(url);
         }
 
+        public async Task<List<ProductVm>> GetLastestProducts(string languageId, int take)
+        {
+            string url = $"/api/products/lastest/{languageId}/{take}";
+            return await GetAsync<List<ProductVm>>(url);
+        }
+
         public async Task<PagedResult<ProductVm>> GetProductPagings(GetProductPagingRequest request)
         {
             string url = $"/api/products/paging?pageIndex={request.PageIndex}&pageSize={request.PageSize}&keyword={request.Keyword}&languageId={request.LanguageId}&categoryId={request.CategoryId}";

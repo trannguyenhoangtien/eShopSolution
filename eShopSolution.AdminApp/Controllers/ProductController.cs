@@ -44,7 +44,7 @@ namespace eShopSolution.AdminApp.Controllers
 
             ViewBag.Keyword = keyword;
             var categories = await _categoryApiClient.GetAll(languageId);
-            ViewBag.Categories = categories.ResultObj.Select(x => new SelectListItem()
+            ViewBag.Categories = categories.Select(x => new SelectListItem()
             {
                 Text = x.Name,
                 Value = x.Id.ToString(),
@@ -113,7 +113,7 @@ namespace eShopSolution.AdminApp.Controllers
             var productObj = await _productApiClient.GetById(id, languageId);
             var categoryObj = await _categoryApiClient.GetAll(languageId);
             var roleAssignRequest = new CategoryAssignRequest();
-            foreach (var cate in categoryObj.ResultObj)
+            foreach (var cate in categoryObj)
             {
                 roleAssignRequest.Categories.Add(new SelectItem()
                 {
