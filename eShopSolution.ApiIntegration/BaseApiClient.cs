@@ -92,21 +92,21 @@ namespace eShopSolution.ApiIntegration
             return JsonConvert.DeserializeObject<TResponse>(result);
         }
 
-        public async Task<List<T>> GetListAsync<T>(string url, bool requiredLogin = false)
+        public async Task<TResponse> GetAsyncNotAuthorize<TResponse>(string url, bool requiredLogin = false)
         {
-            var session = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            //var session = _httpContextAccessor.HttpContext.Session.GetString("Token");
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["BaseAddress"]);
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session);
+            //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session);
 
             var response = await client.GetAsync(url);
             var body = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                var data = (List<T>)JsonConvert.DeserializeObject(body, typeof(List<T>));
-                return data;
+                TResponse myDeserializedObjList = (TResponse)JsonConvert.DeserializeObject(body, typeof(TResponse));
+                return myDeserializedObjList;
             }
-            throw new Exception(body);
+            return JsonConvert.DeserializeObject<TResponse>(body);
         }
     }
 }

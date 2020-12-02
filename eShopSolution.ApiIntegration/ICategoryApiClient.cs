@@ -9,6 +9,6 @@ namespace eShopSolution.ApiIntegration
 {
     public interface ICategoryApiClient
     {
-        Task<List<CategoryVm>> GetAll(string languageId);
+        Task<ResponseResult<List<CategoryVm>>> GetAll(string languageId);
     }
 }
