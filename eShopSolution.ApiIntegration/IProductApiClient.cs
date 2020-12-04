@@ -12,6 +12,7 @@ namespace eShopSolution.ApiIntegration
         Task<PagedResult<ProductVm>> GetProductPagings(GetProductPagingRequest request);
 
         Task<ResponseResult<bool>> CreateProduct(ProductCreateRequest request);
+        Task<ResponseResult<bool>> UpdateProduct(ProductUpdateRequest request);
 
         Task<ResponseResult<bool>> CategoryAssign(int id, CategoryAssignRequest request);
 

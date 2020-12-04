@@ -55,7 +55,7 @@ namespace eShopSolution.AdminApp.Controllers
                 IsPersistent = true
             };
             HttpContext.Session.SetString("DefaultLanguageId",
-                _configuration[SystemContains.AppSettings.DefaultLanguageId]);
+                _configuration[SystemContants.AppSettings.DefaultLanguageId]);
             HttpContext.Session.SetString("Token", result.ResultObj);
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,

@@ -21,7 +21,7 @@ namespace eShopSolution.AdminApp.Controllers.Components
             var languages = await _languageApiClient.GetAll();
             var navigationVm = new NavigationViewModel()
             {
-                CurrentLanguage = HttpContext.Session.GetString(SystemContains.AppSettings.DefaultLanguageId),
+                CurrentLanguage = HttpContext.Session.GetString(SystemContants.AppSettings.DefaultLanguageId),
                 Languages = languages.ResultObj
             };
             return View("Default", navigationVm);

@@ -15,6 +15,7 @@ using eShopSolution.Application.Common;
 using eShopSolution.ViewModels.Catalog.ProductImages;
 using eShopSolution.ViewModels.Common;
 using eShopSolution.ViewModels.Catalog.Categories;
+using eShopSolution.Utilities.Constaints;
 
 namespace eShopSolution.Application.Catalog.Products
 {
@@ -128,6 +129,41 @@ namespace eShopSolution.Application.Catalog.Products
         {
             try
             {
+                var languages = await _context.Languages.ToListAsync();
+                var translations = new List<ProductTranslation>();
+                foreach (var language in languages)
+                {
+                    if(language.Id == request.LanguageId)
+                    {
+                        translations.Add(
+                            new ProductTranslation()
+                            {
+                                Name = request.Name,
+                                Description = request.Description,
+                                Details = request.Details,
+                                SeoDescription = request.SeoDescription,
+                                SeoAlias = request.SeoAlias,
+                                SeoTitle = request.SeoTitle,
+                                LanguageId = request.LanguageId,
+                            }
+                        );
+                    }
+                    else
+                    {
+                        translations.Add(
+                            new ProductTranslation()
+                            {
+                                Name = "",
+                                Description = "",
+                                Details = "",
+                                SeoDescription = "",
+                                SeoAlias = "",
+                                SeoTitle = "",
+                                LanguageId = language.Id,
+                            }
+                        );
+                    }
+                }
                 var product = new Product()
                 {
                     Price = request.Price,
@@ -135,19 +171,7 @@ namespace eShopSolution.Application.Catalog.Products
                     Stock = request.Stock,
                     ViewCount = 0,
                     DateCreated = DateTime.Now,
-                    ProductTranslations = new List<ProductTranslation>()
-                {
-                    new ProductTranslation()
-                    {
-                        Name = request.Name,
-                        Description = request.Description,
-                        Details = request.Details,
-                        SeoDescription = request.SeoDescription,
-                        SeoAlias = request.SeoAlias,
-                        SeoTitle = request.SeoTitle,
-                        LanguageId = request.LanguageId,
-                    }
-                }
+                    ProductTranslations = translations
                 };
 
                 //Save Image

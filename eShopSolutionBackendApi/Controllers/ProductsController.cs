@@ -77,6 +77,7 @@ namespace eShopSolutionBackendApi.Controllers
         }
 
         [HttpPut]
+        [Consumes("multipart/form-data")]
         public async Task<IActionResult> Update([FromForm] ProductUpdateRequest request)
         {
             if (!ModelState.IsValid)
@@ -84,7 +85,7 @@ namespace eShopSolutionBackendApi.Controllers
                 return BadRequest(ModelState);
             }
             var affectedResult = await _productService.Update(request);
-            if (affectedResult.ResultObj == 0)
+            if (!affectedResult.IsSuccess)
                 return BadRequest(affectedResult.Message);
 
             return Ok();

@@ -11,5 +11,6 @@ namespace eShopSolution.AdminApp.Models
     {
         public List<LanguageVm> Languages { get; set; }
         public string CurrentLanguage { get; set; }
+        public string ReturnUrl { get; set; }
     }
 }

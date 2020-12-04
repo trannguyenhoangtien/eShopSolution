@@ -30,7 +30,7 @@ namespace eShopSolution.AdminApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(int? categoryId, string keyword = "", int pageIndex = 1, int pageSize = 10)
         {
-            var languageId = HttpContext.Session.GetString(SystemContains.AppSettings.DefaultLanguageId);
+            var languageId = HttpContext.Session.GetString(SystemContants.AppSettings.DefaultLanguageId);
             var request = new GetProductPagingRequest()
             {
                 Keyword = keyword,
@@ -82,6 +82,46 @@ namespace eShopSolution.AdminApp.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var languageId = HttpContext.Session.GetString(SystemContants.AppSettings.DefaultLanguageId);
+            var product = (await _productApiClient.GetById(id, languageId)).ResultObj;
+            if (product == null)
+                return RedirectToAction("Index");
+
+            var EditVm = new ProductUpdateRequest()
+            {
+                Description = product.Description,
+                Details = product.Details,
+                SeoTitle = product.SeoTitle,
+                Name = product.Name,
+                Id = product.Id,
+                SeoAlias = product.SeoAlias,
+                SeoDescription = product.SeoDescription,
+                IsFeturead = product.IsFeturead,
+            };
+            return View(EditVm);
+        }
+
+        [HttpPost]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Edit([FromForm] ProductUpdateRequest request)
+        {
+            if (!ModelState.IsValid)
+                return View(request);
+
+            var result = await _productApiClient.UpdateProduct(request);
+            if (result.ResultObj)
+            {
+                TempData["result"] = "Sửa thành công";
+                return RedirectToAction("Index");
+            }
+
+            ModelState.AddModelError("", result.Message);
+            return View(request);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> CategoryAssign(int id)
         {
             var categoryAssignRequest = await GetCategoryAssignRequest(id);
@@ -109,7 +149,7 @@ namespace eShopSolution.AdminApp.Controllers
 
         private async Task<CategoryAssignRequest> GetCategoryAssignRequest(int id)
         {
-            var languageId = HttpContext.Session.GetString(SystemContains.AppSettings.DefaultLanguageId);
+            var languageId = HttpContext.Session.GetString(SystemContants.AppSettings.DefaultLanguageId);
             var productObj = await _productApiClient.GetById(id, languageId);
             var categoryObj = await _categoryApiClient.GetAll(languageId);
             var roleAssignRequest = new CategoryAssignRequest();

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace eShopSolution.Utilities.Constaints
 {
-    public class SystemContains
+    public class SystemContants
     {
         public const string MainConectionString = "EShopSolutionDb";
 
@@ -19,6 +19,11 @@ namespace eShopSolution.Utilities.Constaints
         {
             public const int NumberOfFeaturedProduct = 12;
             public const int NumberOfLastestProduct = 6;
+        }
+
+        public class ProductContants
+        {
+            public const string NA = "N/A";
         }
     }
 }
