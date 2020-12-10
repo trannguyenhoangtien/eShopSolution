@@ -277,6 +277,8 @@ namespace eShopSolution.Application.Catalog.Products
                         from pic in ppic.DefaultIfEmpty()
                         join c in _context.Categories on pic.CategoryId equals c.Id into cpic
                         from c in cpic.DefaultIfEmpty()
+                        //join pi in _context.ProductImages on p.Id equals pi.ProductId into ppi
+                        //from pi in ppi.DefaultIfEmpty()
                             //join ct in _context.CategoryTranslations on c.Id equals ct.CategoryId into ctc
                             //from ct in ctc.DefaultIfEmpty()
                         where pt.LanguageId == request.LanguageId
@@ -307,7 +309,10 @@ namespace eShopSolution.Application.Catalog.Products
                     SeoDescription = x.pt.SeoDescription,
                     SeoTitle = x.pt.SeoTitle,
                     Stock = x.p.Stock,
-                    ViewCount = x.p.ViewCount
+                    ViewCount = x.p.ViewCount,
+                    ThumbnailImage = (from pi in _context.ProductImages
+                                      .Where(y => y.ProductId == x.p.Id && y.isDefault == true)
+                                      select pi.ImagePath).FirstOrDefault()
                 }).ToListAsync();
 
             var pagedResult = new PagedResult<ProductVm>()
@@ -388,7 +393,9 @@ namespace eShopSolution.Application.Catalog.Products
                     SeoTitle = x.pt.SeoTitle,
                     Stock = x.p.Stock,
                     ViewCount = x.p.ViewCount,
-                    ThumbnailImage = (from pi in _context.ProductImages.Where(y => y.ProductId == x.p.Id) select pi.ImagePath).FirstOrDefault()
+                    ThumbnailImage = (from pi in _context.ProductImages
+                                      .Where(y => y.ProductId == x.p.Id && y.isDefault == true) 
+                                      select pi.ImagePath).FirstOrDefault()
                 }).ToListAsync();
 
                 return data;

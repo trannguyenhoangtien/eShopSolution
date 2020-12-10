@@ -22,5 +22,10 @@ namespace eShopSolution.ApiIntegration
         {
             return await GetAsyncNotAuthorize<ResponseResult<List<CategoryVm>>>($"/api/categories?languageId={languageId}");
         }
+
+        public async Task<ResponseResult<CategoryVm>> GetById(string languageId, int id)
+        {
+            return await GetAsyncNotAuthorize<ResponseResult<CategoryVm>>($"/api/categories/{id}/{languageId}");
+        }
     }
 }

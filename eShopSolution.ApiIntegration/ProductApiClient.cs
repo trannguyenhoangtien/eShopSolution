@@ -96,7 +96,7 @@ namespace eShopSolution.ApiIntegration
         public async Task<PagedResult<ProductVm>> GetProductPagings(GetProductPagingRequest request)
         {
             string url = $"/api/products/paging?pageIndex={request.PageIndex}&pageSize={request.PageSize}&keyword={request.Keyword}&languageId={request.LanguageId}&categoryId={request.CategoryId}";
-            return await GetAsync<PagedResult<ProductVm>>(url);
+            return await GetAsyncNotAuthorize<PagedResult<ProductVm>>(url);
         }
 
         public async Task<ResponseResult<bool>> UpdateProduct(ProductUpdateRequest request)

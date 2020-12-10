@@ -23,6 +23,7 @@ namespace eShopSolutionBackendApi.Controllers
             _productService = productService;
         }
 
+        [AllowAnonymous]
         [HttpGet("paging")]
         public async Task<IActionResult> GetAllPaging([FromQuery] GetProductPagingRequest request)
         {
@@ -30,6 +31,7 @@ namespace eShopSolutionBackendApi.Controllers
             return Ok(product);
         }
 
+        [AllowAnonymous]
         [HttpGet("{productId}/{languageId}")]
         public async Task<IActionResult> GetById(int productId, string languageId)
         {

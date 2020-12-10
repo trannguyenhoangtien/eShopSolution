@@ -33,5 +33,21 @@ namespace eShopSolution.Application.Catalog.Categories
 
             return new ResponseSuccessResult<List<CategoryVm>>(query);
         }
+
+        public async Task<ResponseResult<CategoryVm>> GetById(string languageId, int id)
+        {
+            var query = await (from c in _context.Categories
+                               join ct in _context.CategoryTranslations on c.Id equals ct.CategoryId
+                               where ct.LanguageId == languageId
+                               && c.Id == id
+                               select new CategoryVm()
+                               {
+                                   Id = c.Id,
+                                   Name = ct.Name,
+                                   ParentId = c.ParentId
+                               }).FirstOrDefaultAsync();
+
+            return new ResponseSuccessResult<CategoryVm>(query);
+        }
     }
 }
