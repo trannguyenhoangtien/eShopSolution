@@ -220,7 +220,7 @@ namespace eShopSolution.Application.Catalog.Products
             }
             catch (Exception ex)
             {
-                return new ResponseErrorResult<int>(ex.InnerException.Message);
+                return new ResponseErrorResult<int>(ex.Message);
             }
         }
 
@@ -356,7 +356,8 @@ namespace eShopSolution.Application.Catalog.Products
                                   SeoTitle = pt.SeoTitle,
                                   Stock = p.Stock,
                                   ViewCount = p.ViewCount,
-                                  Categories = categories
+                                  Categories = categories,
+                                  ThumbnailImage = (from pi in _context.ProductImages.Where(y => y.ProductId == p.Id) select pi.ImagePath).FirstOrDefault()
                               }).FirstOrDefaultAsync();
 
             return new ResponseSuccessResult<ProductVm>(data);

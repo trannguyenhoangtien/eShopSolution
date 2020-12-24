@@ -13,6 +13,7 @@ namespace eShopSolution.ApiIntegration
 
         Task<ResponseResult<bool>> CreateProduct(ProductCreateRequest request);
         Task<ResponseResult<bool>> UpdateProduct(ProductUpdateRequest request);
+        Task<ResponseResult<bool>> DeleteProduct(int id);
 
         Task<ResponseResult<bool>> CategoryAssign(int id, CategoryAssignRequest request);
 

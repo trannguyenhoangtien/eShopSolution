@@ -90,7 +90,7 @@ namespace eShopSolutionBackendApi.Controllers
             if (!affectedResult.IsSuccess)
                 return BadRequest(affectedResult.Message);
 
-            return Ok();
+            return Ok(affectedResult);
         }
 
         [HttpDelete("{productId}")]
@@ -100,7 +100,7 @@ namespace eShopSolutionBackendApi.Controllers
             if (affectedResult.ResultObj == 0)
                 return BadRequest(affectedResult.Message);
 
-            return Ok();
+            return Ok(affectedResult);
         }
 
         [HttpPatch("{productId}/{newPrice}")]
@@ -110,7 +110,7 @@ namespace eShopSolutionBackendApi.Controllers
             if (!affectedResult)
                 return BadRequest();
 
-            return Ok();
+            return Ok(affectedResult);
         }
 
         #region Images

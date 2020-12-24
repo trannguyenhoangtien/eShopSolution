@@ -75,6 +75,12 @@ namespace eShopSolution.ApiIntegration
             return JsonConvert.DeserializeObject<ResponseErrorResult<bool>>(body);
         }
 
+        public async Task<ResponseResult<bool>> DeleteProduct(int id)
+        {
+            string url = $"/api/products/{id}";
+            return await DeleteAsync<ResponseResult<bool>>(url);
+        }
+
         public async Task<ResponseResult<ProductVm>> GetById(int id, string languageId)
         {
             string url = $"/api/products/{id}/{languageId}";
