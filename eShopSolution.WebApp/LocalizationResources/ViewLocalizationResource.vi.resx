@@ -149,6 +149,10 @@
     <value>Đăng nhập</value>
     <comment>Layout</comment>
   </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Đăng xuất</value>
+    <comment>Layout</comment>
+  </data>
   <data name="More Details" xml:space="preserve">
     <value>Xem chi tiết</value>
     <comment>Product detail</comment>

@@ -149,6 +149,10 @@
     <value>Login</value>
     <comment>Layout</comment>
   </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+    <comment>Layout</comment>
+  </data>
   <data name="More Details" xml:space="preserve">
     <value>More Details</value>
     <comment>Product detail</comment>
