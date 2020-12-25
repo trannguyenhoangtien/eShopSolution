@@ -41,8 +41,10 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         @:Welcome!<strong> @User.Identity.Name</strong>
-
-
+                    }
+                    else
+                    {
+                        @:Welcome!<strong> Guest!</strong>
                     }
                 </div>
                 <div class="span6">

@@ -27,6 +27,45 @@ namespace eShopSolution.WebApp.Controllers
         }
 
         [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterRequest request)
+        {
+            if (!ModelState.IsValid)
+                return View(request);
+
+            var result = await _userApiClient.CreateUser(request);
+            if (!result.IsSuccess)
+            {
+                ModelState.AddModelError("", result.Message);
+                return View();
+            }
+            var login = await _userApiClient.Authenticate(new LoginRequest() { 
+                UserName = request.UserName,
+                Password = request.Password,
+                RememberMe = true
+            });
+            var userPrincipal = this.ValidateToken(login.ResultObj);
+            var authProperties = new AuthenticationProperties
+            {
+                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
+                IsPersistent = true
+            };
+
+            HttpContext.Session.SetString("Token", login.ResultObj);
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(userPrincipal),
+                authProperties);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Login()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -37,7 +76,7 @@ namespace eShopSolution.WebApp.Controllers
         public async Task<IActionResult> Login(LoginRequest request)
         {
             if (!ModelState.IsValid)
-                return View();
+                return View(request);
 
             var result = await _userApiClient.Authenticate(request);
             if (!result.IsSuccess)

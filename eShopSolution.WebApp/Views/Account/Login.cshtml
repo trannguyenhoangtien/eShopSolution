@@ -1,4 +1,4 @@
-﻿
+﻿@model eShopSolution.ViewModels.System.Users.LoginRequest 
 @{
     ViewData["Title"] = "Login";
     var culture = CultureInfo.CurrentCulture.Name;
@@ -15,16 +15,9 @@
     <div class="span4">
         <div class="well">
             <h5>CREATE YOUR ACCOUNT</h5><br />
-            Enter your e-mail address to create an account.<br /><br /><br />
             <form action="register.html">
-                <div class="control-group">
-                    <label class="control-label" for="inputEmail0">E-mail address</label>
-                    <div class="controls">
-                        <input class="span3" type="text" id="inputEmail0" placeholder="Email">
-                    </div>
-                </div>
                 <div class="controls">
-                    <button type="submit" class="btn block">Create Your Account</button>
+                    <a href="/@culture/Account/Register" class="btn block">Create Your Account</a>
                 </div>
             </form>
         </div>
@@ -33,17 +26,19 @@
     <div class="span4">
         <div class="well">
             <h5>ALREADY REGISTERED ?</h5>
-            <form action="/@culture/Account/Login" method="post">
+            <form asp-action="Login" asp-controller="Account" method="post">
                 <div class="control-group">
-                    <label class="control-label" for="inputEmail1">Email</label>
+                    <label class="control-label">Email</label>
                     <div class="controls">
-                        <input class="span3" type="text" name="UserName" placeholder="Email">
+                        <input class="span3" type="text" asp-for="UserName" placeholder="Email">
+                        <span asp-validation-for="UserName" class="text-error"></span>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="inputPassword1">Password</label>
+                    <label class="control-label">Password</label>
                     <div class="controls">
-                        <input type="password" class="span3" name="Password" placeholder="Password">
+                        <input type="password" asp-for="Password" class="span3" placeholder="Password">
+                        <span asp-validation-for="Password" class="text-error"></span>
                     </div>
                 </div>
                 <div class="control-group">
