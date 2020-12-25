@@ -7,7 +7,7 @@ namespace eShopSolution.Utilities.Constaints
     public class SystemContants
     {
         public const string MainConectionString = "EShopSolutionDb";
-
+        public const string CartSession = "CartSession";
         public class AppSettings
         {
             public const string DefaultLanguageId = "DefaultLanguageId";

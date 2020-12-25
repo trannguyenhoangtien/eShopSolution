@@ -71,7 +71,7 @@
                                         <a href="@url"><img src="@(Configuration["BaseImageAddress"] + @item.ThumbnailImage)" alt="@item.Name"></a>
                                         <div class="caption">
                                             <h5>@item.Name</h5>
-                                            <h4><a class="btn" href="product_details.html"><localize>VIEW</localize></a> <span class="pull-right">@item.Price</span></h4>
+                                            <h4><a class="btn btn-add-cart" data-id="@item.Id" href="product_details.html"><localize>VIEW</localize></a> <span class="pull-right">@item.Price</span></h4>
                                         </div>
                                     </div>
                                 </li>
@@ -101,7 +101,7 @@
 
                     <h4 style="text-align:center">
                         <a class="btn" href="product_details.html"> <i class="icon-zoom-in"></i></a>
-                        <a class="btn" href="#"><localize>Add to</localize> <i class="icon-shopping-cart"></i></a>
+                        <a class="btn btn-add-cart" data-id="@item.Id" href="#"><localize>Add to</localize> <i class="icon-shopping-cart"></i></a>
                         <a class="btn btn-primary" href="#">@item.Price</a>
                     </h4>
                 </div>
