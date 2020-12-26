@@ -579,5 +579,40 @@ namespace eShopSolution.Application.Catalog.Products
             await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
             return fileName;
         }
+
+        public async Task<List<ProductVm>> GetCartProducts(CartProductRequest request)
+        {
+            try
+            {
+                var query = from p in _context.Products
+                            join pt in _context.ProductTranslations on p.Id equals pt.ProductId
+                            where pt.LanguageId == request.LanguageId && request.ProductIds.Contains(p.Id)
+                            select new { p, pt };
+
+                var data = await query.Select(x => new ProductVm()
+                {
+                    Id = x.p.Id,
+                    Name = x.pt.Name,
+                    DateCreated = x.p.DateCreated,
+                    Description = x.pt.Description,
+                    Details = x.pt.Details,
+                    LanguageId = x.pt.LanguageId,
+                    OriginalPrice = x.p.OriginalPrice,
+                    Price = x.p.Price,
+                    SeoAlias = x.pt.SeoAlias,
+                    SeoDescription = x.pt.SeoDescription,
+                    SeoTitle = x.pt.SeoTitle,
+                    Stock = x.p.Stock,
+                    ViewCount = x.p.ViewCount,
+                    ThumbnailImage = (from pi in _context.ProductImages.Where(y => y.ProductId == x.p.Id) select pi.ImagePath).FirstOrDefault()
+                }).ToListAsync();
+
+                return data;
+            }
+            catch (Exception ex)
+            {
+            }
+            return null;
+        }
     }
 }

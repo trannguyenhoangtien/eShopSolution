@@ -1,5 +1,6 @@
 ﻿using eShopSolution.ApiIntegration;
 using eShopSolution.Utilities.Constaints;
+using eShopSolution.ViewModels.Catalog.Products;
 using eShopSolution.WebApp.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,10 +24,39 @@ namespace eShopSolution.WebApp.Controllers
             return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddToCart(int id, string languageId)
+        [HttpGet]
+        public async Task<IActionResult> GetListCart(string languageId)
         {
-            var product = await _productApiClient.GetById(id, languageId);
+            var cartSession = HttpContext.Session.GetString(SystemContants.CartSession);
+            List<CartItemVm> currentCart;
+
+            if (!string.IsNullOrEmpty(cartSession))
+            {
+                currentCart = JsonConvert.DeserializeObject<List<CartItemVm>>(cartSession);
+                var products = await _productApiClient.GetCartProducts(new CartProductRequest()
+                {
+                    LanguageId = languageId,
+                    ProductIds = currentCart.Select(x => x.ProductId).ToList()
+                });
+                foreach (var item in currentCart)
+                {
+                    var product = products.FirstOrDefault(x=>x.Id == item.ProductId);
+                    item.Name = product.Name;
+                    item.Description = product.Description;
+                    item.Price = product.Price;
+                    item.Image = product.ThumbnailImage;
+                }
+            }
+            else
+                currentCart = new List<CartItemVm>();
+
+            return Ok(currentCart);
+        }
+
+        [HttpPost]
+        public IActionResult AddToCart(int id)
+        {
+            //var product = await _productApiClient.GetById(id, languageId);
             var cartSession = HttpContext.Session.GetString(SystemContants.CartSession);
             List<CartItemVm> currentCart;
 
@@ -44,7 +74,7 @@ namespace eShopSolution.WebApp.Controllers
             {
                 var cartItem = new CartItemVm()
                 {
-                    Image = product.ResultObj.ThumbnailImage,
+//Image = product.ResultObj.ThumbnailImage,
                     ProductId = id,
                     Quantity = 1
                 };

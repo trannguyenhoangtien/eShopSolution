@@ -60,6 +60,15 @@ namespace eShopSolutionBackendApi.Controllers
             return Ok(products);
         }
 
+        [HttpPost("listcart")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetCartProduct([FromBody] CartProductRequest request)
+        {
+            var products = await _productService.GetCartProducts(request);
+
+            return Ok(products);
+        }
+
         [HttpPost]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Create([FromForm] ProductCreateRequest request)

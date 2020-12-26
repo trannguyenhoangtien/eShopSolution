@@ -87,6 +87,13 @@ namespace eShopSolution.ApiIntegration
             return await GetAsync<ResponseResult<ProductVm>>(url);
         }
 
+        public async Task<List<ProductVm>> GetCartProducts(CartProductRequest request)
+        {
+            string json = JsonConvert.SerializeObject(request);
+            string url = $"/api/products/listcart";
+            return await PostAsync<List<ProductVm>>(url, json);
+        }
+
         public async Task<List<ProductVm>> GetFeaturedProducts(string languageId, int take)
         {
             string url = $"/api/products/featured/{languageId}/{take}";
