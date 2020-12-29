@@ -74,7 +74,6 @@ namespace eShopSolution.WebApp.Controllers
             {
                 var cartItem = new CartItemVm()
                 {
-//Image = product.ResultObj.ThumbnailImage,
                     ProductId = id,
                     Quantity = 1
                 };
@@ -82,6 +81,31 @@ namespace eShopSolution.WebApp.Controllers
                 currentCart.Add(cartItem);
             }
             
+            HttpContext.Session.SetString(SystemContants.CartSession, JsonConvert.SerializeObject(currentCart));
+            return Ok();
+        }
+
+        [HttpPost]
+        public IActionResult UpdateCart(int id, int quantity)
+        {
+            var cartSession = HttpContext.Session.GetString(SystemContants.CartSession);
+            List<CartItemVm> currentCart;
+
+            if (!string.IsNullOrEmpty(cartSession))
+                currentCart = JsonConvert.DeserializeObject<List<CartItemVm>>(cartSession);
+            else currentCart = new List<CartItemVm>();
+
+            for (int i = 0; i < currentCart.Count; i++)
+            {
+                if (currentCart[i].ProductId == id)
+                {
+                    if (quantity <= 0)
+                        currentCart.Remove(currentCart[i]);
+                    else
+                        currentCart[i].Quantity = quantity;
+                }
+            }
+
             HttpContext.Session.SetString(SystemContants.CartSession, JsonConvert.SerializeObject(currentCart));
             return Ok();
         }

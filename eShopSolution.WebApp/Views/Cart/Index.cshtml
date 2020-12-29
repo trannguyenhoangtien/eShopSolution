@@ -15,10 +15,10 @@
     <li><a href="/"><localize>Home</localize></a> <span class="divider">/</span></li>
     <li class="active"> SHOPPING CART</li>
 </ul>
-<h3>  SHOPPING CART [ <small><span id="lbTotalItem"></span> Item(s) </small>]<a href="products.html" class="btn btn-large pull-right"><i class="icon-arrow-left"></i> Continue Shopping </a></h3>
+<h3>  SHOPPING CART [ <small><span id="lbTotalItem"></span> Item(s) </small>]<a href="/" class="btn btn-large pull-right"><i class="icon-arrow-left"></i> Continue Shopping </a></h3>
 <hr class="soft" />
 <input type="hidden" id="BaseImageAddress" value='@Configuration["BaseImageAddress"]' />
-<table class="table table-bordered">
+<table id="tbCart" class="table table-bordered">
     <thead>
         <tr>
             <th>Product</th>
@@ -59,7 +59,7 @@
     </tbody>
 </table>
 
-<a href="products.html" class="btn btn-large"><i class="icon-arrow-left"></i> Continue Shopping </a>
+<a href="/" class="btn btn-large"><i class="icon-arrow-left"></i> Continue Shopping </a>
 <a href="login.html" class="btn btn-large pull-right">Next <i class="icon-arrow-right"></i></a>
 
 
