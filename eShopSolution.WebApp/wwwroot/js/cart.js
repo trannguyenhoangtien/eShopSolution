@@ -59,7 +59,7 @@
             type: 'GET',
             url: url,
             data: {
-                languageId: $('#hidCulture').val()
+                //languageId: $('#hidCulture').val()
             },
             success: function (res) {
                 if (res.length === 0) {

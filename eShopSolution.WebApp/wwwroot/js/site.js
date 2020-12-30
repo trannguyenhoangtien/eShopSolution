@@ -34,7 +34,8 @@
                     id: id
                 },
                 success: function (res) {
-                    window.location.href = redirect;
+                    //window.location.href = redirect;
+                    loadCart();
                 },
                 error: function (e) {
                     alert(e);
